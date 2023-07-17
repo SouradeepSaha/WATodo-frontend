@@ -6,16 +6,6 @@ import { v4 as uuid } from "uuid";
 
 function ListSection(props){
   const [todoItems, setTodoItems] = useState([]);
-  // todoItem:
-  // {
-  //   key:"",
-  //   task_id: "".
-  //   task_name:"",
-  //   description:"",
-  //   status:"Not Started",
-  //   due_date:null,
-  //   tag_list:[]
-  // };
 
   const [userTags, setUserTags] = useState([]);
   // { tag_name: "Home", tag_color: "#00B8D9"}
@@ -24,7 +14,7 @@ function ListSection(props){
 
   function getTags(){
     // console.log("IN GET TAGS");
-    const tagUrl = "http://127.0.0.1:8000/tags/" + props.user.user_id;
+    const tagUrl = process.env.REACT_APP_API_URL + "/tags/" + props.user.user_id;
     fetch(tagUrl, {
       method: 'GET',
     })
@@ -37,7 +27,7 @@ function ListSection(props){
   }
 
   function getTasks(){
-    const taskUrl = "http://127.0.0.1:8000/tasks/" + props.user.user_id;
+    const taskUrl = process.env.REACT_APP_API_URL + "/tasks/" + props.user.user_id;
 
     fetch(taskUrl, {
         method: 'GET',
@@ -160,7 +150,7 @@ function ListSection(props){
   function addTagTasks(task_id, tag_list){
     let count = tag_list.length;
     tag_list.forEach(tag_id => {
-      const url = "http://127.0.0.1:8000/tagTasks";
+      const url = process.env.REACT_APP_API_URL + "/tagTasks";
       fetch(url, {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
@@ -172,7 +162,7 @@ function ListSection(props){
       .then(res => res.json())
       .then(msg => {
         --count;
-        if(count == 0 && msg.message === "tag_id " + tag_id + " and task_id " + task_id + " link created successfully!") {
+        if(count === 0 && msg.message === "tag_id " + tag_id + " and task_id " + task_id + " link created successfully!") {
           getTasks();
         } else {
           // tag task relationship failed to create
@@ -184,7 +174,7 @@ function ListSection(props){
   function deleteTagTasks(task_id, tag_list){
     let count = tag_list.length;
     tag_list.forEach(tag_id => {
-      const url = "http://127.0.0.1:8000/tagTasks";
+      const url = process.env.REACT_APP_API_URL + "/tagTasks";
       fetch(url, {
           method: 'DELETE',
           headers: {'Content-Type':'application/json'},
@@ -212,7 +202,7 @@ function ListSection(props){
     }
 
     // console.log(todoItem.due_date);
-    const url = "http://127.0.0.1:8000/tasks";
+    const url = process.env.REACT_APP_API_URL + "/tasks";
 
     fetch(url, {
         method: 'POST',
@@ -223,7 +213,6 @@ function ListSection(props){
           description: todoItem?.description,
           status: todoItem?.status,
           due_date: todoItem?.due_date,
-          description: todoItem?.description,
         })
     })
     .then(res => res.json())
@@ -246,7 +235,7 @@ function ListSection(props){
         todoItem.due_date = updateDate(todoItem.due_date);
       }
 
-      const url = "http://127.0.0.1:8000/tasks/task/" + todoItem.task_id;
+      const url = process.env.REACT_APP_API_URL + "/tasks/task/" + todoItem.task_id;
 
       fetch(url, {
           method: 'PUT',
@@ -255,8 +244,7 @@ function ListSection(props){
             task_name: todoItem.task_name,
             description: todoItem?.description,
             status: todoItem?.status,
-            due_date: todoItem?.due_date,
-            description: todoItem?.description,
+            due_date: todoItem?.due_date
           })
       })
       .then(res => res.json())
@@ -282,7 +270,7 @@ function ListSection(props){
   }
 
   function deleteTodoItem(id){
-    const url = "http://127.0.0.1:8000/tasks/" + id;
+    const url = process.env.REACT_APP_API_URL + "/tasks/" + id;
 
     fetch(url, {
         method: 'DELETE'
@@ -298,7 +286,7 @@ function ListSection(props){
   }
 
   function addUserTags(tag){
-    const url = "http://127.0.0.1:8000/tags";
+    const url = process.env.REACT_APP_API_URL + "/tags";
 
     fetch(url, {
         method: 'POST',
@@ -324,7 +312,7 @@ function ListSection(props){
     tags.forEach(item => {
       const deleteID = userTags.filter(tag => tag.tag_name === item)[0].tag_id;
       // console.log("deleteID" + deleteID);
-      const url = "http://127.0.0.1:8000/tags/" + deleteID;
+      const url = process.env.REACT_APP_API_URL + "/tags/" + deleteID;
       fetch(url, {
           method: 'DELETE'
       })

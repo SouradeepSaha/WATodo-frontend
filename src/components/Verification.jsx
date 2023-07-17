@@ -12,8 +12,8 @@ function Verification(props) {
         setError("");
         let email = event.target[0].value;
         let code = event.target[1].value;
-        const url = "http://127.0.0.1:8000/verify/";
-        
+        const url = process.env.REACT_APP_API_URL+ "/verify/";
+
         fetch(url, {
             method: 'post',
             headers: {'Content-Type':'application/json'},
@@ -72,7 +72,7 @@ function Verification(props) {
                     </form>
                     <div className="my-2 d-flex">
                         <div className="text-secondary">Log In to a different an account?</div>
-                        <div className="ms-auto"><a href="#" onClick={setVerificationPage} className="link-primary">Sign In</a></div>
+                        <div className="ms-auto"><a href="/#" onClick={setVerificationPage} className="link-primary">Sign In</a></div>
                     </div>
                 </div>
             }
@@ -80,12 +80,12 @@ function Verification(props) {
                 <div className="my-2 d-flex">
                     <legend>Account successfully verified!</legend>
                     <div className="text-secondary">Log In to your account</div>
-                    <div className="ms-auto"><a href="#" onClick={setVerificationPage} className="link-primary">Sign In</a></div>
+                    <div className="ms-auto"><a href="/#" onClick={setVerificationPage} className="link-primary">Sign In</a></div>
                 </div>
             }
           </div>
       </div>
     );
   }
-  
+
   export default Verification;

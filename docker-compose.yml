@@ -9,3 +9,4 @@ services:
       - 3000:3000
     environment:
       NODE_ENV: production
+      REACT_APP_API_URL: http://129.153.61.57:8000

@@ -20,7 +20,7 @@ function SignUp(props) {
         let pass1raw = event.target[4].value;
         let pass2raw = event.target[5].value;
 
-        const url = "http://127.0.0.1:8000/signup";
+        const url = process.env.REACT_APP_API_URL+"/signup";
 
         if(handleCreateAccount(username, pass1raw, pass2raw, fname, lname, email)) {
             fetch(url, {
@@ -57,7 +57,7 @@ function SignUp(props) {
                 setError("There was a problem with signing up, try again later!");
             }
         }
-    }, [response]);
+    }, [props, response]);
 
     function gotoSignUpPage(){
         props.setSignUpPage(false);
@@ -157,7 +157,7 @@ function SignUp(props) {
               </form>
               <div className="my-2 d-flex">
                   <div className="text-secondary">Already have an account?</div>
-                  <div className="ms-auto"><a href="#" onClick={gotoSignUpPage} className="link-primary">Sign In</a></div>
+                  <div className="ms-auto"><a href="/#" onClick={gotoSignUpPage} className="link-primary">Sign In</a></div>
               </div>
           </div>
       </div>

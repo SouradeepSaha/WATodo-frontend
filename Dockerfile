@@ -1,5 +1,6 @@
 # build environment
 FROM node:16-alpine as build
+ENV REACT_APP_API_URL http://129.153.61.57:8000
 WORKDIR /app
 COPY . .
 RUN npm install

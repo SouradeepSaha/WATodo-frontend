@@ -1,5 +1,5 @@
 // import './App.css';
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import Verification from "./Verification";
@@ -28,29 +28,25 @@ function App() {
     setUser(id);
   }
 
-  // useEffect(() => {
-  //   console.log(signUp);
-  // }, [signUp]);
-
   return (
     <div className="App">
       {verification && <Verification setSignIn={setSignIn} setVerificationPage={setVerificationPage} />}
-      {!verification && !signedIn && !signUp && 
-        <SignIn 
-          setSignIn={setSignIn} 
-          setSignUpPage={setSignUpPage} 
+      {!verification && !signedIn && !signUp &&
+        <SignIn
+          setSignIn={setSignIn}
+          setSignUpPage={setSignUpPage}
           setVerification={setVerificationPage}
           loadUser={loadUser}
         />
       }
-      {!verification && !signedIn && signUp && 
-        <SignUp 
-          setVerification={setVerificationPage} 
+      {!verification && !signedIn && signUp &&
+        <SignUp
+          setVerification={setVerificationPage}
           setSignUpPage={setSignUpPage}
         />
       }
-      {!verification && signedIn && 
-        <ToDoView 
+      {!verification && signedIn &&
+        <ToDoView
           setSignIn={setSignIn}
           user={user}
           loadUser={loadUser}

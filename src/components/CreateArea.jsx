@@ -24,24 +24,20 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 
-// import FormHelperText from '@mui/material/FormHelperText';
-// import Stack from '@mui/material/Stack';
-// import OutlinedInput from '@mui/material/OutlinedInput';
-// import Form from 'react-bootstrap/Form';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function CreateArea(props) {
-   // Current Date
-   const currentDate = new Date();
-   const defaultDueDate = currentDate.getFullYear() + '-' 
-                       + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' 
-                       + String(currentDate.getDate()+1).padStart(2, '0')
-                       + "T00:00";
+  // Current Date
+  const currentDate = new Date();
+  const defaultDueDate = currentDate.getFullYear() + '-'
+  + String(currentDate.getMonth() + 1).padStart(2, '0') + '-'
+  + String(currentDate.getDate()+1).padStart(2, '0')
+  + "T00:00";
 
-  // States: 
+  // States:
   const [isExpanded, setExpanded] = useState(false);
   const [dueDate, setDueDate] = useState(defaultDueDate);
   const [prevDueDate, setPrevDueDate] = useState(dueDate);
@@ -77,7 +73,7 @@ function CreateArea(props) {
 
   // for detecting click outside of create area
   // const refClick = useRef(null);
-  
+
   function updateSelectedTags(event){
     //console.log("ENTER updateSelectedTags");
     const value  = event.target.value;
@@ -178,7 +174,7 @@ function CreateArea(props) {
       setDueDate(prevDueDate);
     }
     //console.log("EXIT useEffect includeDueDate");
-  }, [includeDueDate]);
+  }, [dueDate, includeDueDate, prevDueDate]);
 
   useEffect(() => {
     // console.log("ENTER useEffect dueDate");
@@ -216,7 +212,7 @@ function CreateArea(props) {
       setError("Please include a title!");
     } else {
       props.onAdd(todoItem);
-      
+
       retract();
       setError("");
 
@@ -270,124 +266,124 @@ function CreateArea(props) {
 
   return (
     <div>
-      <form className="create-todoItem" >
-        {/* <Stack noValidate spacing={1}>  */}
-          <input className="create-area-title" value={todoItem.task_name} onChange={handleChange} onClick={expand} name="task_name" placeholder="Add Task..." />
-          <div>
-            {isExpanded &&
-              <div className="due-date-check w-100" ><Checkbox checked={includeDueDate} onChange={toggleIncludeDueDate}  />Include Due Date</div>
-            }
-            {isExpanded && includeDueDate &&
-              <TextField className="due-date-field w-100 ms-2 mb-3"
-                id="datetime-local"
-                name="due_date"
-                label="Due Date"
-                type="datetime-local"
-                defaultValue={prevDueDate}
-                onChange={updateDueDate}
-                sx={{ width: 250 }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            }
-          </div>
-          <div>
-            {isExpanded &&
-              <FormControl className="select-status-field w-100" sx={{ m: 1, minWidth: 160 }}>
-                <InputLabel>Select Status*</InputLabel>
-                <Select
-                  name="status"
-                  className="status-select"
-                  value={todoItem.status} 
-                  label="Select Status"
-                  onChange={handleChange}
-                  displayEmpty>
-                  <MenuItem value="Not Started">Not Started</MenuItem>
-                  <MenuItem value="In Progress">In Progress</MenuItem>
-                  <MenuItem value="Completed">Completed</MenuItem>
-                </Select>
-              </FormControl>
-            }
-            {isExpanded &&
-              <FormControl className="select-tags-field w-100" sx={{ m: 1, minWidth: 240 }}>
-                <InputLabel>Select Tags</InputLabel>
-                <Select
-                  multiple
-                  name="tag_list"
-                  className="tag-select"
-                  value={todoItem.tag_list}
-                  label="Select Tags"
-                  onChange={updateSelectedTags}
-                  // input={<OutlinedInput label="Selected Tag" />}
-                  renderValue={(selected) => selected.join(', ')}
-                  MenuProps={MenuProps}
-                >
-                  <div>
-                    <Button className="delete-tag-button" variant="outlined" onClick={handleDeleteTagOpen}>
-                      Delete selected tags
-                    </Button>
-                    <Dialog
-                      open={deleteTagConfirm}
-                      TransitionComponent={Transition}
-                      keepMounted
-                      onClose={handleDeleteTagClose}
-                      aria-describedby="alert-dialog-slide-description"
-                    >
-                      <DialogTitle>{"Permanently delete selected tags?"}</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText id="alert-dialog-slide-description">
-                          This will delete the tags from associated tasks.
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleDeleteTagClose}>Cancel</Button>
-                        <Button onClick={handleDeleteTags}>Delete</Button>
-                      </DialogActions>
-                    </Dialog>
-                  </div>
-                  {props.userTags.slice(0).reverse().map((tag, index) => (
-                      <MenuItem className="tag-menu-item" key={index} value={tag.tag_name}>
-                        <Checkbox checked={selectedTags.indexOf(tag.tag_name) > -1} />
-                        <ListItemText primary={tag.tag_name} />
-                        <CircleIcon style={{ color: tag.tag_color }} />
-                      </MenuItem>
-                  ))}
-                </Select>
-            </FormControl>
-            }
-          </div>
-          {isExpanded && 
-            <div className="add-tag-field">
-              <TextField className="add-tag-title" onChange={handleAddTagName} label="Add new tag..." value={addedTag} variant="standard" />
-              <CircleIcon className="add-tag-icon" onClick={toggleColourPicking} style={{ color: addedTagColour }} />
-              <AddIcon className="add-tag-icon" onClick={handleAddTag} style={{ color: "#009FFD" }} />
-              { isColourPicking &&
-                <CirclePicker className="add-tag-colour" onChange={ handleAddTagColour } color={addedTagColour} />
-              }   
-            </div>
-          }
-          {isExpanded && 
-            <textarea 
-              value={todoItem.description} 
-              onChange={handleChange} 
-              name="description" 
-              placeholder="Write a description here..." 
-              rows={isExpanded ? 3 : 1} />
-          } 
-          {isExpanded && error.length > 0 &&
-            <p onClick={dismissError} className="error-msg"> { error + " (Click to Dismiss)" } </p>
-          }
-          <Zoom in={isExpanded}>
-          <Fab onClick={submitTodoItem}><AddIcon /></Fab>
-          </Zoom>
-          <Zoom in={isExpanded}>
-          <Fab className="retract-create-area" onClick={retract}><RetractIcon /></Fab>
-          </Zoom>
-        {/* </Stack> */}
-      </form>
+    <form className="create-todoItem" >
+    {/* <Stack noValidate spacing={1}>  */}
+    <input className="create-area-title" value={todoItem.task_name} onChange={handleChange} onClick={expand} name="task_name" placeholder="Add Task..." />
+    <div>
+    {isExpanded &&
+      <div className="due-date-check w-100" ><Checkbox checked={includeDueDate} onChange={toggleIncludeDueDate}  />Include Due Date</div>
+    }
+    {isExpanded && includeDueDate &&
+      <TextField className="due-date-field w-100 ms-2 mb-3"
+      id="datetime-local"
+      name="due_date"
+      label="Due Date"
+      type="datetime-local"
+      defaultValue={prevDueDate}
+      onChange={updateDueDate}
+      sx={{ width: 250 }}
+      InputLabelProps={{
+        shrink: true,
+      }}
+      />
+    }
     </div>
-  );
-}
+    <div>
+    {isExpanded &&
+      <FormControl className="select-status-field w-100" sx={{ m: 1, minWidth: 160 }}>
+      <InputLabel>Select Status*</InputLabel>
+      <Select
+      name="status"
+      className="status-select"
+      value={todoItem.status}
+      label="Select Status"
+      onChange={handleChange}
+      displayEmpty>
+      <MenuItem value="Not Started">Not Started</MenuItem>
+      <MenuItem value="In Progress">In Progress</MenuItem>
+      <MenuItem value="Completed">Completed</MenuItem>
+      </Select>
+      </FormControl>
+    }
+    {isExpanded &&
+      <FormControl className="select-tags-field w-100" sx={{ m: 1, minWidth: 240 }}>
+      <InputLabel>Select Tags</InputLabel>
+      <Select
+      multiple
+      name="tag_list"
+      className="tag-select"
+      value={todoItem.tag_list}
+      label="Select Tags"
+      onChange={updateSelectedTags}
+      // input={<OutlinedInput label="Selected Tag" />}
+      renderValue={(selected) => selected.join(', ')}
+      MenuProps={MenuProps}
+      >
+      <div>
+      <Button className="delete-tag-button" variant="outlined" onClick={handleDeleteTagOpen}>
+      Delete selected tags
+      </Button>
+      <Dialog
+      open={deleteTagConfirm}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={handleDeleteTagClose}
+      aria-describedby="alert-dialog-slide-description"
+      >
+      <DialogTitle>{"Permanently delete selected tags?"}</DialogTitle>
+      <DialogContent>
+      <DialogContentText id="alert-dialog-slide-description">
+      This will delete the tags from associated tasks.
+      </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+      <Button onClick={handleDeleteTagClose}>Cancel</Button>
+      <Button onClick={handleDeleteTags}>Delete</Button>
+      </DialogActions>
+      </Dialog>
+      </div>
+      {props.userTags.slice(0).reverse().map((tag, index) => (
+        <MenuItem className="tag-menu-item" key={index} value={tag.tag_name}>
+        <Checkbox checked={selectedTags.indexOf(tag.tag_name) > -1} />
+        <ListItemText primary={tag.tag_name} />
+        <CircleIcon style={{ color: tag.tag_color }} />
+        </MenuItem>
+        ))}
+        </Select>
+        </FormControl>
+      }
+      </div>
+      {isExpanded &&
+        <div className="add-tag-field">
+        <TextField className="add-tag-title" onChange={handleAddTagName} label="Add new tag..." value={addedTag} variant="standard" />
+        <CircleIcon className="add-tag-icon" onClick={toggleColourPicking} style={{ color: addedTagColour }} />
+        <AddIcon className="add-tag-icon" onClick={handleAddTag} style={{ color: "#009FFD" }} />
+        { isColourPicking &&
+          <CirclePicker className="add-tag-colour" onChange={ handleAddTagColour } color={addedTagColour} />
+        }
+        </div>
+      }
+      {isExpanded &&
+        <textarea
+        value={todoItem.description}
+        onChange={handleChange}
+        name="description"
+        placeholder="Write a description here..."
+        rows={isExpanded ? 3 : 1} />
+      }
+      {isExpanded && error.length > 0 &&
+        <p onClick={dismissError} className="error-msg"> { error + " (Click to Dismiss)" } </p>
+      }
+      <Zoom in={isExpanded}>
+      <Fab onClick={submitTodoItem}><AddIcon /></Fab>
+      </Zoom>
+      <Zoom in={isExpanded}>
+      <Fab className="retract-create-area" onClick={retract}><RetractIcon /></Fab>
+      </Zoom>
+      {/* </Stack> */}
+      </form>
+      </div>
+      );
+    }
 
-export default CreateArea;
+    export default CreateArea;

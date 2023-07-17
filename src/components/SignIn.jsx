@@ -14,8 +14,8 @@ function SignIn(props) {
         setError("");
         let email = event.target[0].value;
         let password = event.target[1].value;
-        
-        const url = "http://127.0.0.1:8000/login";
+
+        const url = process.env.REACT_APP_API_URL+ "/login";
 
         fetch(url, {
             method: 'POST',
@@ -47,9 +47,9 @@ function SignIn(props) {
             } else if (response.code === 402) { // Email does not exist
                 setError("An account with that email doesn't exist... Try Again!");
             } else if (Object.hasOwn(response, 'errors')) { // Validator Email Error
-                if (response.errors[0].param == "email") {
+                if (response.errors[0].param === "email") {
                     setError("Make sure you are using a valid email address... Try Again!");
-                } else if (response.errors[0].param == "password") {
+                } else if (response.errors[0].param === "password") {
                     setError("Incorrect Password... Try Again!");
                 }
             } else {
@@ -82,11 +82,11 @@ function SignIn(props) {
               </form>
               <div className="my-2 d-flex">
 				<div className="text-secondary">Don't have an account?</div>
-				    <div className="ms-auto"><a href="#" onClick={setSignUpPage} className="link-primary">Create an account</a></div>
+				    <div className="ms-auto"><a href="/#" onClick={setSignUpPage} className="link-primary">Create an account</a></div>
 			    </div>
           </div>
       </div>
     );
   }
-  
+
   export default SignIn;
